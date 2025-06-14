@@ -1,0 +1,19 @@
+{
+  "name": "advanced-ai-agent-frontend",
+  "version": "1.0.0",
+  "description": "Frontend for Advanced AI Agent - Clean Architecture",
+  "main": "index.html",
+  "scripts": {
+    "build-css": "npx tailwindcss -i ./src/input.css -o ./assets/css/styles.css --watch",
+    "build": "npx tailwindcss -i ./src/input.css -o ./assets/css/styles.css --minify",
+    "dev": "npx tailwindcss -i ./src/input.css -o ./assets/css/styles.css --watch",
+    "serve": "npx http-server . -p 3000 -c-1"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.4.1",
+    "http-server": "^14.1.1"
+  },
+  "keywords": ["ai", "chat", "azure", "tailwind"],
+  "author": "Osvaldo Vega",
+  "license": "MIT"
+}
