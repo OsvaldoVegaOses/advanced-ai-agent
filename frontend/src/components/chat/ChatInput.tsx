@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useRef, KeyboardEvent } from 'react';
-import { ChatInputProps } from '@/types';
+import { ChatInputProps } from '../types';
 import { PaperAirplaneIcon, StopIcon } from '@heroicons/react/24/outline';
 
 export default function ChatInput({ 

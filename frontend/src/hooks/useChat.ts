@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react';
-import { useAppStore } from '@/store/useAppStore';
-import { apiClient } from '@/lib/api';
-import { Message, UseChatOptions, UseChatReturn } from '@/types';
+import { useAppStore } from '../store/useAppStore';
+import { apiClient } from '../lib/api';
+import { Message, UseChatOptions, UseChatReturn } from '../types';
 
 export function useChat(options: UseChatOptions = {}): UseChatReturn {
   const { 

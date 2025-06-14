@@ -1,12 +1,12 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useAppStore } from '@/store/useAppStore';
-import ChatLayout from '@/components/layout/ChatLayout';
-import WelcomeScreen from '@/components/chat/WelcomeScreen';
-import ChatInterface from '@/components/chat/ChatInterface';
-import { apiClient } from '@/lib/api';
-import { HealthStatus } from '@/types';
+import { useAppStore } from '../store/useAppStore';
+import ChatLayout from '../components/layout/ChatLayout';
+import WelcomeScreen from '../components/chat/WelcomeScreen';
+import ChatInterface from '../components/chat/ChatInterface';
+import { apiClient } from '../lib/api';
+import { HealthStatus } from '../types';
 
 export default function HomePage() {
   const { chat, addNotification } = useAppStore();

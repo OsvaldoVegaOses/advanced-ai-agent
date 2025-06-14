@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { AppStore, User, Conversation, Message, Notification, AgentConfig, UserPreferences } from '@/types';
+import { AppStore, User, Conversation, Message, Notification, AgentConfig, UserPreferences } from '../types';
 
 const defaultConfig: AgentConfig = {
   name: 'Advanced AI Agent',

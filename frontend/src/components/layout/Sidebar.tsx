@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useAppStore } from '@/store/useAppStore';
+import { useAppStore } from '../store/useAppStore';
 import { 
   PlusIcon,
   ChatBubbleLeftIcon,
@@ -10,7 +10,7 @@ import {
   TrashIcon,
   PencilIcon
 } from '@heroicons/react/24/outline';
-import { Conversation } from '@/types';
+import { Conversation } from '../types';
 
 export default function Sidebar() {
   const { 

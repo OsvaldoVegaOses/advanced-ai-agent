@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useAppStore } from '@/store/useAppStore';
+import { useAppStore } from '../store/useAppStore';
 import Sidebar from './Sidebar';
 import NotificationContainer from '../ui/NotificationContainer';
 import { Bars3Icon } from '@heroicons/react/24/outline';
