@@ -5,6 +5,14 @@
       "rewrite": "https://advanced-ai-agent-0003.azurewebsites.net/health"
     },
     {
+      "route": "/api/chat",
+      "rewrite": "https://advanced-ai-agent-0003.azurewebsites.net/chat"
+    },
+    {
+      "route": "/api/conversations",
+      "rewrite": "https://advanced-ai-agent-0003.azurewebsites.net/conversations"
+    },
+    {
       "route": "/api/*",
       "rewrite": "https://advanced-ai-agent-0003.azurewebsites.net/*"
     },
