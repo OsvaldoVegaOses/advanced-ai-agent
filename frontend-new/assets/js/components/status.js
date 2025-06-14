@@ -28,7 +28,12 @@ class StatusComponent {
     if (result.success) {
       this.setStatus('connected', 'Conectado');
     } else {
-      this.setStatus('error', 'Sin conexión');
+      // Distinguir entre diferentes tipos de errores
+      if (result.status === 'route_error') {
+        this.setStatus('error', 'Configurando rutas...');
+      } else {
+        this.setStatus('error', 'Sin conexión');
+      }
     }
   }
 

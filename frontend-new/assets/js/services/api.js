@@ -3,10 +3,11 @@
  */
 class ApiService {
   constructor() {
-    this.baseUrl = window.location.origin;
+    // Usar directamente el backend para evitar problemas de proxy
+    this.baseUrl = 'https://advanced-ai-agent-0003.azurewebsites.net';
     this.endpoints = {
-      chat: '/api/chat',
-      health: '/api/health'
+      chat: '/chat',
+      health: '/health'
     };
   }
 
@@ -28,8 +29,25 @@ class ApiService {
         throw new Error(`HTTP ${response.status}: ${response.statusText}`);
       }
 
-      const data = await response.json();
-      return { success: true, data };
+      // Verificar si la respuesta es JSON o HTML
+      const contentType = response.headers.get('content-type');
+      
+      if (contentType && contentType.includes('application/json')) {
+        const data = await response.json();
+        return { success: true, data };
+      } else if (contentType && contentType.includes('text/html')) {
+        // Si recibimos HTML, significa que Azure no está redirigiendo correctamente
+        console.warn(`Received HTML instead of JSON for ${endpoint} - API route not configured`);
+        return { 
+          success: false, 
+          error: 'API route not configured correctly',
+          status: 'route_error'
+        };
+      } else {
+        // Intentar parsear como JSON por defecto
+        const data = await response.json();
+        return { success: true, data };
+      }
     } catch (error) {
       console.error(`API Error (${endpoint}):`, error);
       return { 
