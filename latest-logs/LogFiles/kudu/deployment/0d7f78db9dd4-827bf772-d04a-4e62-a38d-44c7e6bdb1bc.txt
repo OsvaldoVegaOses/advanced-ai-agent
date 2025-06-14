@@ -1,0 +1,14 @@
+2025-06-14T06:36:35  Fetching changes.
+2025-06-14T06:36:35    Starting  LocalZipHandler
+2025-06-14T06:36:35    Cleaning up temp folders from previous zip deployments and extracting pushed zip file /tmp/zipdeploy/6410c5c2-22d2-47d5-bfe3-77f007c77357.zip (0.12 MB) to /tmp/zipdeploy/extracted
+2025-06-14T06:36:38  Updating submodules.
+2025-06-14T06:36:38  Preparing deployment for commit id 'f20ecfb1-5'.
+2025-06-14T06:36:39  PreDeployment: context.CleanOutputPath False
+2025-06-14T06:36:39  PreDeployment: context.OutputPath /home/site/wwwroot
+2025-06-14T06:36:39  Running build. Project type: OneDeploy
+2025-06-14T06:36:39  Copying the manifest
+2025-06-14T06:36:39  Incrementally deploying to /home/site/wwwroot
+2025-06-14T06:36:40  Build completed succesfully.
+2025-06-14T06:36:40  Running post deployment command(s)...
+2025-06-14T06:36:40  Triggering container recycle for OneDeploy by adding/updating restartTrigger.txt to the site root path
+2025-06-14T06:36:40  Deployment successful. deployer = OneDeploy deploymentPath = OneDeploy

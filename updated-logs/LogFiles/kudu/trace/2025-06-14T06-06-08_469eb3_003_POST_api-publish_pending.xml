@@ -1,0 +1,206 @@
+<step title="Incoming Request" date="2025-06-14T06:06:08.940" instance="469eb3" url="/api/publish?type=zip" method="POST" type="request" pid="770,1,77" Accept="*/*" Host="advanced-ai-agent-0003.scm.azurewebsites.net" User-Agent="AZURECLI/2.69.0" Accept-Encoding="gzip, deflate" Authorization="Bas..." Cache-Control="no-cache" Content-Type="application/octet-stream" Content-Length="1594" x-ms-client-request-id="a333681d-48e5-11f0-9a08-94085330741e" x-ms-artifact-checksum="0fa1b26c8201d79f47d6a614892fecbccafb593d319eca4c79c7be4d662fc5b7" X-ARR-LOG-ID="a333681d-48e5-11f0-9a08-94085330741e" CLIENT-IP="179.60.75.128:27561" X-SITE-DEPLOYMENT-ID="advanced-ai-agent-0003" WAS-DEFAULT-HOSTNAME="advanced-ai-agent-0003.scm.azurewebsites.net" X-Forwarded-Proto="https" X-AppService-Proto="https" X-Forwarded-TlsVersion="1.3" X-WAWS-Unencoded-URL="/api/publish?type=zip" X-Client-IP="179.60.75.128" X-Client-Port="27561" >
+  <step title="Cleanup Xml Logs" date="2025-06-14T06:06:08.949" /><!-- duration: 4ms -->
+  <step title="OneDeploy" date="2025-06-14T06:06:09.136" >
+    <step title="None repository commit" date="2025-06-14T06:06:09.154" >
+      <step title="Commit id: 3bbb018e-e362-42b3-9a9c-26822e6fcfec" date="2025-06-14T06:06:09.157" Message="N/A" AuthorName="N/A" AuthorEmail="N/A" /><!-- duration: 2ms -->
+    </step><!-- duration: 7ms -->
+    <step title="Starting PushDeployAsync" date="2025-06-14T06:06:09.164" /><!-- duration: 2ms -->
+    <step title="Writing artifact to /tmp/zipdeploy/50cd008a-bebc-43ca-8e82-7c2f25ded26e.zip" date="2025-06-14T06:06:09.203" >
+      <step title="Writing multipart request body to /tmp/zipdeploy/50cd008a-bebc-43ca-8e82-7c2f25ded26e.zip" date="2025-06-14T06:06:09.212" /><!-- duration: 2ms -->
+    </step><!-- duration: 193ms -->
+    <step title="Attempting to fetch target branch HEAD" date="2025-06-14T06:06:09.428" /><!-- duration: 17ms -->
+    <step title="Acquiring Deployment Lock" date="2025-06-14T06:06:09.477" /><!-- duration: 8ms -->
+    <step title="Acquired Deployment Lock" date="2025-06-14T06:06:09.672" /><!-- duration: 2ms -->
+    <step title="Performing fetch based deployment" date="2025-06-14T06:06:09.680" >
+      <step title="Creating temporary deployment" date="2025-06-14T06:06:09.694" /><!-- duration: 83ms -->
+      <step title="Releasing Deployment Lock" date="2025-06-14T06:06:10.926" /><!-- duration: 4ms -->
+      <step title="Cleaning up temp folders from previous zip deployments and extracting pushed zip file /tmp/zipdeploy/50cd008a-bebc-43ca-8e82-7c2f25ded26e.zip (0.00 MB) to /tmp/zipdeploy/extracted" date="2025-06-14T06:06:10.968" >
+        <step title="ChmodRecursive Process exited with total time taken in ms: 107" date="2025-06-14T06:06:11.141" /><!-- duration: 9ms -->
+      </step><!-- duration: 201ms -->
+      <step title="None repository commit" date="2025-06-14T06:06:11.172" >
+        <step title="Commit id: 3bbb018e-e362-42b3-9a9c-26822e6fcfec" date="2025-06-14T06:06:11.179" Message="OneDeploy" AuthorName="N/A" AuthorEmail="N/A" /><!-- duration: 2ms -->
+      </step><!-- duration: 18ms -->
+      <step title="Deployment timer started" date="2025-06-14T06:06:13.201" >
+        <step title="DeploymentManager.Deploy(id:3bbb018e-e362-42b3-9a9c-26822e6fcfec)" date="2025-06-14T06:06:13.216" >
+          <step title="Collecting changeset information" date="2025-06-14T06:06:13.247" /><!-- duration: 71ms -->
+          <step title="Updating submodules" date="2025-06-14T06:06:13.330" /><!-- duration: 1129ms -->
+          <step title="Determining deployment builder" date="2025-06-14T06:06:14.617" >
+            <step title="Builder is OryxBuilder" date="2025-06-14T06:06:14.667" /><!-- duration: 8ms -->
+          </step><!-- duration: 61ms -->
+          <step title="PreDeployment: context.CleanOutputPath False" date="2025-06-14T06:06:14.709" >
+            <step title="PreDeployment: context.OutputPath /home/site/wwwroot" date="2025-06-14T06:06:14.789" >
+              <step title="Building" date="2025-06-14T06:06:14.881" >
+                <step title="Executing external process" date="2025-06-14T06:06:15.119" type="process" path="bash" arguments="-c &quot;oryx build /tmp/zipdeploy/extracted -o /home/site/wwwroot --platform python --platform-version 3.11 -p virtualenv_name=antenv --log-file /tmp/build-debug.log  -i /tmp/8ddab0991df8a0c --compress-destination-dir | tee /tmp/oryx-build.log ; exit $PIPESTATUS &quot;" >
+                  <step title="Process dump" date="2025-06-14T06:07:35.579" exitCode="1" type="processOutput" /><!-- duration: 17ms -->
+                </step><!-- duration: 80489ms -->
+                <step title="Error occurred" date="2025-06-14T06:07:35.916" type="error" text="ERROR: Could not open requirements file: [Errno 2] No such file or directory: &apos;requirements-simple.txt&apos;
+
+[notice] A new release of pip is available: 24.0 -&gt; 25.1.1
+[notice] To update, run: pip install --upgrade pip
+[2025-06-14 06:07:29 +0000] [2057] [INFO] Starting gunicorn 21.2.0
+[2025-06-14 06:07:29 +0000] [2057] [ERROR] Connection in use: (&apos;0.0.0.0&apos;, 8181)
+[2025-06-14 06:07:29 +0000] [2057] [ERROR] Retrying in 1 second.
+[2025-06-14 06:07:30 +0000] [2057] [ERROR] Connection in use: (&apos;0.0.0.0&apos;, 8181)
+[2025-06-14 06:07:30 +0000] [2057] [ERROR] Retrying in 1 second.
+[2025-06-14 06:07:31 +0000] [2057] [ERROR] Connection in use: (&apos;0.0.0.0&apos;, 8181)
+[2025-06-14 06:07:31 +0000] [2057] [ERROR] Retrying in 1 second.
+[2025-06-14 06:07:32 +0000] [2057] [ERROR] Connection in use: (&apos;0.0.0.0&apos;, 8181)
+[2025-06-14 06:07:32 +0000] [2057] [ERROR] Retrying in 1 second.
+[2025-06-14 06:07:33 +0000] [2057] [ERROR] Connection in use: (&apos;0.0.0.0&apos;, 8181)
+[2025-06-14 06:07:33 +0000] [2057] [ERROR] Retrying in 1 second.
+[2025-06-14 06:07:34 +0000] [2057] [ERROR] Can&apos;t connect to (&apos;0.0.0.0&apos;, 8181)
+/bin/bash -c &quot;oryx build /tmp/zipdeploy/extracted -o /home/site/wwwroot --platform python --platform-version 3.11 -p virtualenv_name=antenv --log-file /tmp/build-debug.log  -i /tmp/8ddab0991df8a0c --compress-destination-dir | tee /tmp/oryx-build.log ; exit $PIPESTATUS &quot;" stackTrace="   at Kudu.Core.Infrastructure.Executable.ExecuteInternal(ITracer tracer, Func`2 onWriteOutput, Func`2 onWriteError, CancellationToken token, Encoding encoding, String arguments, Object[] args) in /tmp/KuduLite/Kudu.Core/Infrastructure/Executable.cs:line 239
+   at Kudu.Core.Infrastructure.Executable.ExecuteWithProgressWriter(ILogger logger, ITracer tracer, CancellationToken token, String arguments, Object[] args) in /tmp/KuduLite/Kudu.Core/Infrastructure/Executable.cs:line 118
+   at Kudu.Core.Deployment.Generator.ExternalCommandBuilder.RunCommand(DeploymentContext context, String command, Boolean ignoreManifest, CancellationToken token, String message) in /tmp/KuduLite/Kudu.Core/Deployment/Generator/ExternalCommandBuilder.cs:line 115" /><!-- duration: 10ms -->
+                <step title="Error occurred" date="2025-06-14T06:07:35.985" type="error" text="ERROR: Could not open requirements file: [Errno 2] No such file or directory: &apos;requirements-simple.txt&apos;
+
+[notice] A new release of pip is available: 24.0 -&gt; 25.1.1
+[notice] To update, run: pip install --upgrade pip
+[2025-06-14 06:07:29 +0000] [2057] [INFO] Starting gunicorn 21.2.0
+[2025-06-14 06:07:29 +0000] [2057] [ERROR] Connection in use: (&apos;0.0.0.0&apos;, 8181)
+[2025-06-14 06:07:29 +0000] [2057] [ERROR] Retrying in 1 second.
+[2025-06-14 06:07:30 +0000] [2057] [ERROR] Connection in use: (&apos;0.0.0.0&apos;, 8181)
+[2025-06-14 06:07:30 +0000] [2057] [ERROR] Retrying in 1 second.
+[2025-06-14 06:07:31 +0000] [2057] [ERROR] Connection in use: (&apos;0.0.0.0&apos;, 8181)
+[2025-06-14 06:07:31 +0000] [2057] [ERROR] Retrying in 1 second.
+[2025-06-14 06:07:32 +0000] [2057] [ERROR] Connection in use: (&apos;0.0.0.0&apos;, 8181)
+[2025-06-14 06:07:32 +0000] [2057] [ERROR] Retrying in 1 second.
+[2025-06-14 06:07:33 +0000] [2057] [ERROR] Connection in use: (&apos;0.0.0.0&apos;, 8181)
+[2025-06-14 06:07:33 +0000] [2057] [ERROR] Retrying in 1 second.
+[2025-06-14 06:07:34 +0000] [2057] [ERROR] Can&apos;t connect to (&apos;0.0.0.0&apos;, 8181)
+/bin/bash -c &quot;oryx build /tmp/zipdeploy/extracted -o /home/site/wwwroot --platform python --platform-version 3.11 -p virtualenv_name=antenv --log-file /tmp/build-debug.log  -i /tmp/8ddab0991df8a0c --compress-destination-dir | tee /tmp/oryx-build.log ; exit $PIPESTATUS &quot;" stackTrace="   at Kudu.Core.Infrastructure.Executable.ExecuteInternal(ITracer tracer, Func`2 onWriteOutput, Func`2 onWriteError, CancellationToken token, Encoding encoding, String arguments, Object[] args) in /tmp/KuduLite/Kudu.Core/Infrastructure/Executable.cs:line 239
+   at Kudu.Core.Infrastructure.Executable.ExecuteWithProgressWriter(ILogger logger, ITracer tracer, CancellationToken token, String arguments, Object[] args) in /tmp/KuduLite/Kudu.Core/Infrastructure/Executable.cs:line 118
+   at Kudu.Core.Deployment.Generator.ExternalCommandBuilder.RunCommand(DeploymentContext context, String command, Boolean ignoreManifest, CancellationToken token, String message) in /tmp/KuduLite/Kudu.Core/Deployment/Generator/ExternalCommandBuilder.cs:line 115
+   at Kudu.Core.Deployment.Generator.OryxBuilder.RunBuildCommand(IOryxArguments args, DeploymentContext context, CancellationToken token) in /tmp/KuduLite/Kudu.Core/Deployment/Generator/OryxBuilder.cs:line 282
+   at Kudu.Core.Deployment.Generator.OryxBuilder.Build(DeploymentContext context, CancellationToken token) in /tmp/KuduLite/Kudu.Core/Deployment/Generator/OryxBuilder.cs:line 119
+   at Kudu.Core.Deployment.DeploymentManager.Build(ChangeSet changeSet, ITracer tracer, IDisposable deployStep, IRepository repository, DeploymentInfoBase deploymentInfo, DeploymentAnalytics deploymentAnalytics, Boolean fullBuildByDefault, CancellationToken cancellationToken) in /tmp/KuduLite/Kudu.Core/Deployment/DeploymentManager.cs:line 771" /><!-- duration: 9ms -->
+                <step title="Using PythonDeploymentLogParser" date="2025-06-14T06:07:36.395" /><!-- duration: 8ms -->
+              </step><!-- duration: 82857ms -->
+            </step><!-- duration: 82954ms -->
+            <step title="Error occurred" date="2025-06-14T06:07:37.745" type="error" text="ERROR: Could not open requirements file: [Errno 2] No such file or directory: &apos;requirements-simple.txt&apos;
+
+[notice] A new release of pip is available: 24.0 -&gt; 25.1.1
+[notice] To update, run: pip install --upgrade pip
+[2025-06-14 06:07:29 +0000] [2057] [INFO] Starting gunicorn 21.2.0
+[2025-06-14 06:07:29 +0000] [2057] [ERROR] Connection in use: (&apos;0.0.0.0&apos;, 8181)
+[2025-06-14 06:07:29 +0000] [2057] [ERROR] Retrying in 1 second.
+[2025-06-14 06:07:30 +0000] [2057] [ERROR] Connection in use: (&apos;0.0.0.0&apos;, 8181)
+[2025-06-14 06:07:30 +0000] [2057] [ERROR] Retrying in 1 second.
+[2025-06-14 06:07:31 +0000] [2057] [ERROR] Connection in use: (&apos;0.0.0.0&apos;, 8181)
+[2025-06-14 06:07:31 +0000] [2057] [ERROR] Retrying in 1 second.
+[2025-06-14 06:07:32 +0000] [2057] [ERROR] Connection in use: (&apos;0.0.0.0&apos;, 8181)
+[2025-06-14 06:07:32 +0000] [2057] [ERROR] Retrying in 1 second.
+[2025-06-14 06:07:33 +0000] [2057] [ERROR] Connection in use: (&apos;0.0.0.0&apos;, 8181)
+[2025-06-14 06:07:33 +0000] [2057] [ERROR] Retrying in 1 second.
+[2025-06-14 06:07:34 +0000] [2057] [ERROR] Can&apos;t connect to (&apos;0.0.0.0&apos;, 8181)
+/bin/bash -c &quot;oryx build /tmp/zipdeploy/extracted -o /home/site/wwwroot --platform python --platform-version 3.11 -p virtualenv_name=antenv --log-file /tmp/build-debug.log  -i /tmp/8ddab0991df8a0c --compress-destination-dir | tee /tmp/oryx-build.log ; exit $PIPESTATUS &quot;" stackTrace="   at Kudu.Core.Infrastructure.Executable.ExecuteInternal(ITracer tracer, Func`2 onWriteOutput, Func`2 onWriteError, CancellationToken token, Encoding encoding, String arguments, Object[] args) in /tmp/KuduLite/Kudu.Core/Infrastructure/Executable.cs:line 239
+   at Kudu.Core.Infrastructure.Executable.ExecuteWithProgressWriter(ILogger logger, ITracer tracer, CancellationToken token, String arguments, Object[] args) in /tmp/KuduLite/Kudu.Core/Infrastructure/Executable.cs:line 118
+   at Kudu.Core.Deployment.Generator.ExternalCommandBuilder.RunCommand(DeploymentContext context, String command, Boolean ignoreManifest, CancellationToken token, String message) in /tmp/KuduLite/Kudu.Core/Deployment/Generator/ExternalCommandBuilder.cs:line 115
+   at Kudu.Core.Deployment.Generator.OryxBuilder.RunBuildCommand(IOryxArguments args, DeploymentContext context, CancellationToken token) in /tmp/KuduLite/Kudu.Core/Deployment/Generator/OryxBuilder.cs:line 282
+   at Kudu.Core.Deployment.Generator.OryxBuilder.Build(DeploymentContext context, CancellationToken token) in /tmp/KuduLite/Kudu.Core/Deployment/Generator/OryxBuilder.cs:line 119
+   at Kudu.Core.Deployment.DeploymentManager.Build(ChangeSet changeSet, ITracer tracer, IDisposable deployStep, IRepository repository, DeploymentInfoBase deploymentInfo, DeploymentAnalytics deploymentAnalytics, Boolean fullBuildByDefault, CancellationToken cancellationToken) in /tmp/KuduLite/Kudu.Core/Deployment/DeploymentManager.cs:line 771
+   at Kudu.Core.Deployment.DeploymentManager.Build(ChangeSet changeSet, ITracer tracer, IDisposable deployStep, IRepository repository, DeploymentInfoBase deploymentInfo, DeploymentAnalytics deploymentAnalytics, Boolean fullBuildByDefault, CancellationToken cancellationToken) in /tmp/KuduLite/Kudu.Core/Deployment/DeploymentManager.cs:line 840" /><!-- duration: 4ms -->
+            <step title="Cleaning up temp files" date="2025-06-14T06:07:37.827" /><!-- duration: 1888ms -->
+            <step title="Cleaning up temp files" date="2025-06-14T06:07:39.720" /><!-- duration: 511ms -->
+            <step title="Error occurred" date="2025-06-14T06:07:40.255" type="error" text="ERROR: Could not open requirements file: [Errno 2] No such file or directory: &apos;requirements-simple.txt&apos;
+
+[notice] A new release of pip is available: 24.0 -&gt; 25.1.1
+[notice] To update, run: pip install --upgrade pip
+[2025-06-14 06:07:29 +0000] [2057] [INFO] Starting gunicorn 21.2.0
+[2025-06-14 06:07:29 +0000] [2057] [ERROR] Connection in use: (&apos;0.0.0.0&apos;, 8181)
+[2025-06-14 06:07:29 +0000] [2057] [ERROR] Retrying in 1 second.
+[2025-06-14 06:07:30 +0000] [2057] [ERROR] Connection in use: (&apos;0.0.0.0&apos;, 8181)
+[2025-06-14 06:07:30 +0000] [2057] [ERROR] Retrying in 1 second.
+[2025-06-14 06:07:31 +0000] [2057] [ERROR] Connection in use: (&apos;0.0.0.0&apos;, 8181)
+[2025-06-14 06:07:31 +0000] [2057] [ERROR] Retrying in 1 second.
+[2025-06-14 06:07:32 +0000] [2057] [ERROR] Connection in use: (&apos;0.0.0.0&apos;, 8181)
+[2025-06-14 06:07:32 +0000] [2057] [ERROR] Retrying in 1 second.
+[2025-06-14 06:07:33 +0000] [2057] [ERROR] Connection in use: (&apos;0.0.0.0&apos;, 8181)
+[2025-06-14 06:07:33 +0000] [2057] [ERROR] Retrying in 1 second.
+[2025-06-14 06:07:34 +0000] [2057] [ERROR] Can&apos;t connect to (&apos;0.0.0.0&apos;, 8181)
+/bin/bash -c &quot;oryx build /tmp/zipdeploy/extracted -o /home/site/wwwroot --platform python --platform-version 3.11 -p virtualenv_name=antenv --log-file /tmp/build-debug.log  -i /tmp/8ddab0991df8a0c --compress-destination-dir | tee /tmp/oryx-build.log ; exit $PIPESTATUS &quot;" stackTrace="   at Kudu.Core.Infrastructure.Executable.ExecuteInternal(ITracer tracer, Func`2 onWriteOutput, Func`2 onWriteError, CancellationToken token, Encoding encoding, String arguments, Object[] args) in /tmp/KuduLite/Kudu.Core/Infrastructure/Executable.cs:line 239
+   at Kudu.Core.Infrastructure.Executable.ExecuteWithProgressWriter(ILogger logger, ITracer tracer, CancellationToken token, String arguments, Object[] args) in /tmp/KuduLite/Kudu.Core/Infrastructure/Executable.cs:line 118
+   at Kudu.Core.Deployment.Generator.ExternalCommandBuilder.RunCommand(DeploymentContext context, String command, Boolean ignoreManifest, CancellationToken token, String message) in /tmp/KuduLite/Kudu.Core/Deployment/Generator/ExternalCommandBuilder.cs:line 115
+   at Kudu.Core.Deployment.Generator.OryxBuilder.RunBuildCommand(IOryxArguments args, DeploymentContext context, CancellationToken token) in /tmp/KuduLite/Kudu.Core/Deployment/Generator/OryxBuilder.cs:line 282
+   at Kudu.Core.Deployment.Generator.OryxBuilder.Build(DeploymentContext context, CancellationToken token) in /tmp/KuduLite/Kudu.Core/Deployment/Generator/OryxBuilder.cs:line 119
+   at Kudu.Core.Deployment.DeploymentManager.Build(ChangeSet changeSet, ITracer tracer, IDisposable deployStep, IRepository repository, DeploymentInfoBase deploymentInfo, DeploymentAnalytics deploymentAnalytics, Boolean fullBuildByDefault, CancellationToken cancellationToken) in /tmp/KuduLite/Kudu.Core/Deployment/DeploymentManager.cs:line 771
+   at Kudu.Core.Deployment.DeploymentManager.Build(ChangeSet changeSet, ITracer tracer, IDisposable deployStep, IRepository repository, DeploymentInfoBase deploymentInfo, DeploymentAnalytics deploymentAnalytics, Boolean fullBuildByDefault, CancellationToken cancellationToken) in /tmp/KuduLite/Kudu.Core/Deployment/DeploymentManager.cs:line 840
+   at Kudu.Core.Deployment.DeploymentManager.DeployAsync(IRepository repository, ChangeSet changeSet, String deployer, Boolean clean, DeploymentInfoBase deploymentInfo, Boolean needFileUpdate, Boolean fullBuildByDefault) in /tmp/KuduLite/Kudu.Core/Deployment/DeploymentManager.cs:line 266" /><!-- duration: 3ms -->
+          </step><!-- duration: 85565ms -->
+          <step title="Reloading status file with latest updates" date="2025-06-14T06:07:40.298" >
+            <step title="WebHooksManager.PublishEventAsync: PostDeployment" date="2025-06-14T06:07:40.304" /><!-- duration: 105ms -->
+          </step><!-- duration: 112ms -->
+          <step title="Error occurred" date="2025-06-14T06:07:40.413" type="error" text="ERROR: Could not open requirements file: [Errno 2] No such file or directory: &apos;requirements-simple.txt&apos;
+
+[notice] A new release of pip is available: 24.0 -&gt; 25.1.1
+[notice] To update, run: pip install --upgrade pip
+[2025-06-14 06:07:29 +0000] [2057] [INFO] Starting gunicorn 21.2.0
+[2025-06-14 06:07:29 +0000] [2057] [ERROR] Connection in use: (&apos;0.0.0.0&apos;, 8181)
+[2025-06-14 06:07:29 +0000] [2057] [ERROR] Retrying in 1 second.
+[2025-06-14 06:07:30 +0000] [2057] [ERROR] Connection in use: (&apos;0.0.0.0&apos;, 8181)
+[2025-06-14 06:07:30 +0000] [2057] [ERROR] Retrying in 1 second.
+[2025-06-14 06:07:31 +0000] [2057] [ERROR] Connection in use: (&apos;0.0.0.0&apos;, 8181)
+[2025-06-14 06:07:31 +0000] [2057] [ERROR] Retrying in 1 second.
+[2025-06-14 06:07:32 +0000] [2057] [ERROR] Connection in use: (&apos;0.0.0.0&apos;, 8181)
+[2025-06-14 06:07:32 +0000] [2057] [ERROR] Retrying in 1 second.
+[2025-06-14 06:07:33 +0000] [2057] [ERROR] Connection in use: (&apos;0.0.0.0&apos;, 8181)
+[2025-06-14 06:07:33 +0000] [2057] [ERROR] Retrying in 1 second.
+[2025-06-14 06:07:34 +0000] [2057] [ERROR] Can&apos;t connect to (&apos;0.0.0.0&apos;, 8181)
+/bin/bash -c &quot;oryx build /tmp/zipdeploy/extracted -o /home/site/wwwroot --platform python --platform-version 3.11 -p virtualenv_name=antenv --log-file /tmp/build-debug.log  -i /tmp/8ddab0991df8a0c --compress-destination-dir | tee /tmp/oryx-build.log ; exit $PIPESTATUS &quot;" stackTrace="   at Kudu.Core.Infrastructure.Executable.ExecuteInternal(ITracer tracer, Func`2 onWriteOutput, Func`2 onWriteError, CancellationToken token, Encoding encoding, String arguments, Object[] args) in /tmp/KuduLite/Kudu.Core/Infrastructure/Executable.cs:line 239
+   at Kudu.Core.Infrastructure.Executable.ExecuteWithProgressWriter(ILogger logger, ITracer tracer, CancellationToken token, String arguments, Object[] args) in /tmp/KuduLite/Kudu.Core/Infrastructure/Executable.cs:line 118
+   at Kudu.Core.Deployment.Generator.ExternalCommandBuilder.RunCommand(DeploymentContext context, String command, Boolean ignoreManifest, CancellationToken token, String message) in /tmp/KuduLite/Kudu.Core/Deployment/Generator/ExternalCommandBuilder.cs:line 115
+   at Kudu.Core.Deployment.Generator.OryxBuilder.RunBuildCommand(IOryxArguments args, DeploymentContext context, CancellationToken token) in /tmp/KuduLite/Kudu.Core/Deployment/Generator/OryxBuilder.cs:line 282
+   at Kudu.Core.Deployment.Generator.OryxBuilder.Build(DeploymentContext context, CancellationToken token) in /tmp/KuduLite/Kudu.Core/Deployment/Generator/OryxBuilder.cs:line 119
+   at Kudu.Core.Deployment.DeploymentManager.Build(ChangeSet changeSet, ITracer tracer, IDisposable deployStep, IRepository repository, DeploymentInfoBase deploymentInfo, DeploymentAnalytics deploymentAnalytics, Boolean fullBuildByDefault, CancellationToken cancellationToken) in /tmp/KuduLite/Kudu.Core/Deployment/DeploymentManager.cs:line 771
+   at Kudu.Core.Deployment.DeploymentManager.Build(ChangeSet changeSet, ITracer tracer, IDisposable deployStep, IRepository repository, DeploymentInfoBase deploymentInfo, DeploymentAnalytics deploymentAnalytics, Boolean fullBuildByDefault, CancellationToken cancellationToken) in /tmp/KuduLite/Kudu.Core/Deployment/DeploymentManager.cs:line 840
+   at Kudu.Core.Deployment.DeploymentManager.DeployAsync(IRepository repository, ChangeSet changeSet, String deployer, Boolean clean, DeploymentInfoBase deploymentInfo, Boolean needFileUpdate, Boolean fullBuildByDefault) in /tmp/KuduLite/Kudu.Core/Deployment/DeploymentManager.cs:line 266" /><!-- duration: 2ms -->
+          <step title="Marking deployment as failed and cleaning up the temp deployment" date="2025-06-14T06:07:40.458" /><!-- duration: 5ms -->
+        </step><!-- duration: 87333ms -->
+      </step><!-- duration: 87360ms -->
+      <step title="Error occurred" date="2025-06-14T06:07:40.600" type="error" text="Deployment failed" stackTrace="   at Kudu.Core.Deployment.DeploymentManager.DeployAsync(IRepository repository, ChangeSet changeSet, String deployer, Boolean clean, DeploymentInfoBase deploymentInfo, Boolean needFileUpdate, Boolean fullBuildByDefault) in /tmp/KuduLite/Kudu.Core/Deployment/DeploymentManager.cs:line 307
+   at Kudu.Core.Deployment.FetchDeploymentManager.PerformDeployment(DeploymentInfoBase deploymentInfo, IDisposable tempDeployment, ChangeSet tempChangeSet, DeployStatusApiResult updateStatusObj) in /tmp/KuduLite/Kudu.Core/Deployment/FetchDeploymentManager.cs:line 230
+   at Kudu.Core.Deployment.FetchDeploymentManager.&lt;&gt;c__DisplayClass17_0.&lt;&lt;FetchDeploy&gt;b__0&gt;d.MoveNext() in /tmp/KuduLite/Kudu.Core/Deployment/FetchDeploymentManager.cs:line 131
+--- End of stack trace from previous location ---
+   at Kudu.Core.Deployment.FetchDeploymentManager.FetchDeploy(DeploymentInfoBase deployInfo, Boolean asyncRequested, Uri requestUri, String targetBranch) in /tmp/KuduLite/Kudu.Core/Deployment/FetchDeploymentManager.cs:line 124
+   at Kudu.Services.Deployment.PushDeploymentController.PushDeployAsync(ArtifactDeploymentInfo deploymentInfo, Boolean isAsync, HttpContext context, JObject requestJson) in /tmp/KuduLite/Kudu.Services/Deployment/PushDeploymentController.cs:line 791
+   at Kudu.Services.Deployment.PushDeploymentController.OneDeploy(String type, Boolean async, String path, Nullable`1 restart, Nullable`1 clean, Boolean ignoreStack, Boolean trackDeploymentProgress, Boolean trackStatus, Boolean reset) in /tmp/KuduLite/Kudu.Services/Deployment/PushDeploymentController.cs:line 624
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.TaskOfIActionResultExecutor.Execute(IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.&lt;InvokeActionMethodAsync&gt;g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.&lt;InvokeNextActionFilterAsync&gt;g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State&amp; next, Scope&amp; scope, Object&amp; state, Boolean&amp; isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.&lt;InvokeInnerFilterAsync&gt;g__Awaited|13_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.&lt;InvokeNextResourceFilter&gt;g__Awaited|25_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.Rethrow(ResourceExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.Next(State&amp; next, Scope&amp; scope, Object&amp; state, Boolean&amp; isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.&lt;InvokeFilterPipelineAsync&gt;g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.&lt;InvokeAsync&gt;g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.&lt;InvokeAsync&gt;g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Builder.RouterMiddleware.Invoke(HttpContext httpContext)
+   at Kudu.Services.Web.Tracing.TraceMiddleware.Invoke(HttpContext context) in /tmp/KuduLite/Kudu.Services.Web/Tracing/TraceMiddleware.cs:line 101" innerText="ERROR: Could not open requirements file: [Errno 2] No such file or directory: &apos;requirements-simple.txt&apos;
+
+[notice] A new release of pip is available: 24.0 -&gt; 25.1.1
+[notice] To update, run: pip install --upgrade pip
+[2025-06-14 06:07:29 +0000] [2057] [INFO] Starting gunicorn 21.2.0
+[2025-06-14 06:07:29 +0000] [2057] [ERROR] Connection in use: (&apos;0.0.0.0&apos;, 8181)
+[2025-06-14 06:07:29 +0000] [2057] [ERROR] Retrying in 1 second.
+[2025-06-14 06:07:30 +0000] [2057] [ERROR] Connection in use: (&apos;0.0.0.0&apos;, 8181)
+[2025-06-14 06:07:30 +0000] [2057] [ERROR] Retrying in 1 second.
+[2025-06-14 06:07:31 +0000] [2057] [ERROR] Connection in use: (&apos;0.0.0.0&apos;, 8181)
+[2025-06-14 06:07:31 +0000] [2057] [ERROR] Retrying in 1 second.
+[2025-06-14 06:07:32 +0000] [2057] [ERROR] Connection in use: (&apos;0.0.0.0&apos;, 8181)
+[2025-06-14 06:07:32 +0000] [2057] [ERROR] Retrying in 1 second.
+[2025-06-14 06:07:33 +0000] [2057] [ERROR] Connection in use: (&apos;0.0.0.0&apos;, 8181)
+[2025-06-14 06:07:33 +0000] [2057] [ERROR] Retrying in 1 second.
+[2025-06-14 06:07:34 +0000] [2057] [ERROR] Can&apos;t connect to (&apos;0.0.0.0&apos;, 8181)
+/bin/bash -c &quot;oryx build /tmp/zipdeploy/extracted -o /home/site/wwwroot --platform python --platform-version 3.11 -p virtualenv_name=antenv --log-file /tmp/build-debug.log  -i /tmp/8ddab0991df8a0c --compress-destination-dir | tee /tmp/oryx-build.log ; exit $PIPESTATUS &quot;" innerStackTrace="   at Kudu.Core.Infrastructure.Executable.ExecuteInternal(ITracer tracer, Func`2 onWriteOutput, Func`2 onWriteError, CancellationToken token, Encoding encoding, String arguments, Object[] args) in /tmp/KuduLite/Kudu.Core/Infrastructure/Executable.cs:line 239
+   at Kudu.Core.Infrastructure.Executable.ExecuteWithProgressWriter(ILogger logger, ITracer tracer, CancellationToken token, String arguments, Object[] args) in /tmp/KuduLite/Kudu.Core/Infrastructure/Executable.cs:line 118
+   at Kudu.Core.Deployment.Generator.ExternalCommandBuilder.RunCommand(DeploymentContext context, String command, Boolean ignoreManifest, CancellationToken token, String message) in /tmp/KuduLite/Kudu.Core/Deployment/Generator/ExternalCommandBuilder.cs:line 115
+   at Kudu.Core.Deployment.Generator.OryxBuilder.RunBuildCommand(IOryxArguments args, DeploymentContext context, CancellationToken token) in /tmp/KuduLite/Kudu.Core/Deployment/Generator/OryxBuilder.cs:line 282
+   at Kudu.Core.Deployment.Generator.OryxBuilder.Build(DeploymentContext context, CancellationToken token) in /tmp/KuduLite/Kudu.Core/Deployment/Generator/OryxBuilder.cs:line 119
+   at Kudu.Core.Deployment.DeploymentManager.Build(ChangeSet changeSet, ITracer tracer, IDisposable deployStep, IRepository repository, DeploymentInfoBase deploymentInfo, DeploymentAnalytics deploymentAnalytics, Boolean fullBuildByDefault, CancellationToken cancellationToken) in /tmp/KuduLite/Kudu.Core/Deployment/DeploymentManager.cs:line 771
+   at Kudu.Core.Deployment.DeploymentManager.Build(ChangeSet changeSet, ITracer tracer, IDisposable deployStep, IRepository repository, DeploymentInfoBase deploymentInfo, DeploymentAnalytics deploymentAnalytics, Boolean fullBuildByDefault, CancellationToken cancellationToken) in /tmp/KuduLite/Kudu.Core/Deployment/DeploymentManager.cs:line 840
+   at Kudu.Core.Deployment.DeploymentManager.DeployAsync(IRepository repository, ChangeSet changeSet, String deployer, Boolean clean, DeploymentInfoBase deploymentInfo, Boolean needFileUpdate, Boolean fullBuildByDefault) in /tmp/KuduLite/Kudu.Core/Deployment/DeploymentManager.cs:line 266" /><!-- duration: 7ms -->
+      <step title="Incoming Request" date="2025-06-14T06:07:40.657" url="/Error?type=zip" method="POST" type="request" pid="770,1,77" Accept="*/*" Host="advanced-ai-agent-0003.scm.azurewebsites.net" User-Agent="AZURECLI/2.69.0" Accept-Encoding="gzip, deflate" Authorization="Bas..." Cache-Control="no-cache" Content-Type="application/octet-stream" Content-Length="1594" x-ms-client-request-id="a333681d-48e5-11f0-9a08-94085330741e" x-ms-artifact-checksum="0fa1b26c8201d79f47d6a614892fecbccafb593d319eca4c79c7be4d662fc5b7" X-ARR-LOG-ID="a333681d-48e5-11f0-9a08-94085330741e" CLIENT-IP="179.60.75.128:27561" X-SITE-DEPLOYMENT-ID="advanced-ai-agent-0003" WAS-DEFAULT-HOSTNAME="advanced-ai-agent-0003.scm.azurewebsites.net" X-Forwarded-Proto="https" X-AppService-Proto="https" X-Forwarded-TlsVersion="1.3" X-WAWS-Unencoded-URL="/api/publish?type=zip" X-Client-IP="179.60.75.128" X-Client-Port="27561" >
+        <step title="Outgoing response" date="2025-06-14T06:07:40.771" type="response" statusCode="400" statusText="BadRequest" /><!-- duration: 4ms -->
+      </step><!-- duration: 120ms -->
