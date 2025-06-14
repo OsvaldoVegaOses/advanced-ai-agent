@@ -2,19 +2,23 @@
   "routes": [
     {
       "route": "/api/health",
-      "rewrite": "https://advanced-ai-agent-0003.azurewebsites.net/health"
+      "rewrite": "https://advanced-ai-agent-0003.azurewebsites.net/health",
+      "allowedMethods": ["GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD", "PATCH"]
     },
     {
       "route": "/api/chat",
-      "rewrite": "https://advanced-ai-agent-0003.azurewebsites.net/chat"
+      "rewrite": "https://advanced-ai-agent-0003.azurewebsites.net/chat",
+      "allowedMethods": ["GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD", "PATCH"]
     },
     {
       "route": "/api/conversations",
-      "rewrite": "https://advanced-ai-agent-0003.azurewebsites.net/conversations"
+      "rewrite": "https://advanced-ai-agent-0003.azurewebsites.net/conversations",
+      "allowedMethods": ["GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD", "PATCH"]
     },
     {
       "route": "/api/*",
-      "rewrite": "https://advanced-ai-agent-0003.azurewebsites.net/*"
+      "rewrite": "https://advanced-ai-agent-0003.azurewebsites.net/*",
+      "allowedMethods": ["GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD", "PATCH"]
     },
     {
       "route": "/*",
