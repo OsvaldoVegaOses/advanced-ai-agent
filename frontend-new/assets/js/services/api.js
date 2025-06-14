@@ -66,8 +66,9 @@ class ApiService {
       method: 'POST',
       body: JSON.stringify({
         message,
-        session_id: sessionId,
-        context: {},
+        conversation_id: sessionId,
+        temperature: 0.7,
+        max_tokens: 1000,
         stream: false
       })
     });
