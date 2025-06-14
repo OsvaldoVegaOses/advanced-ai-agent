@@ -1,0 +1,1 @@
+"""Scripts module for Advanced AI Agent"""
