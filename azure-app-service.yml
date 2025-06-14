@@ -1,0 +1,88 @@
+# Azure App Service deployment configuration
+# This file defines the infrastructure and deployment settings
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: advanced-ai-agent
+  labels:
+    app: advanced-ai-agent
+    version: v1.0.0
+
+spec:
+  # Application configuration
+  app_name: "advanced-ai-agent"
+  resource_group: "startup_id_group"
+  subscription_id: "0fbf8e45-6f68-43bb-acbc-36747f267122"
+  location: "eastus"
+  
+  # App Service Plan configuration
+  app_service_plan:
+    name: "ai-agent-plan"
+    sku: "B2"  # Basic tier for cost optimization
+    os: "linux"
+    runtime: "python|3.11"
+  
+  # Application settings
+  app_settings:
+    # Runtime configuration
+    ENVIRONMENT: "production"
+    DEBUG: "False"
+    PYTHONPATH: "/home/site/wwwroot"
+    
+    # Database configuration (will be set via Azure Portal)
+    DATABASE_URL: "postgresql://username:password@server.postgres.database.azure.com:5432/ai_agent_db"
+    REDIS_URL: "redis://ai-agent-cache.redis.cache.windows.net:6380"
+    
+    # Azure OpenAI configuration
+    USE_MANAGED_IDENTITY: "True"
+    AZURE_OPENAI_ENDPOINT: "https://nubeweb.openai.azure.com/"
+    AZURE_OPENAI_VERSION: "2024-10-21"
+    
+    # Model deployments
+    AZURE_CHAT_DEPLOYMENT: "gpt-4o-mini"
+    AZURE_VISION_DEPLOYMENT: "gpt-4o-mini"
+    AZURE_REASONING_DEPLOYMENT: "o1"
+    AZURE_EMBEDDINGS_DEPLOYMENT: "text-embedding-3-small"
+    
+    # Security
+    JWT_SECRET_KEY: "@Microsoft.KeyVault(SecretUri=https://ai-agent-vault.vault.azure.net/secrets/jwt-secret/)"
+    SECRET_KEY: "@Microsoft.KeyVault(SecretUri=https://ai-agent-vault.vault.azure.net/secrets/app-secret/)"
+    
+    # Monitoring
+    SENTRY_DSN: "@Microsoft.KeyVault(SecretUri=https://ai-agent-vault.vault.azure.net/secrets/sentry-dsn/)"
+    
+    # Rate limiting
+    RATE_LIMIT_PER_MINUTE: "60"
+    RATE_LIMIT_PER_HOUR: "1000"
+    
+    # Allowed hosts
+    ALLOWED_HOSTS: "advanced-ai-agent.azurewebsites.net,*.azurewebsites.net"
+  
+  # Scaling configuration
+  scaling:
+    min_instances: 1
+    max_instances: 3
+    scale_rules:
+      - name: "cpu-scale"
+        metric: "cpu"
+        threshold: 70
+        action: "scale_out"
+      - name: "memory-scale"
+        metric: "memory"
+        threshold: 80
+        action: "scale_out"
+  
+  # Health check configuration
+  health_check:
+    path: "/health/live"
+    interval: 30
+    timeout: 10
+    retries: 3
+  
+  # Deployment slots
+  slots:
+    - name: "staging"
+      settings_inherit: true
+    - name: "production"
+      settings_inherit: true

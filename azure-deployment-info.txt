@@ -1,0 +1,14 @@
+# Azure Deployment Information
+APP_NAME=advanced-ai-agent-0003
+KEY_VAULT_NAME=ai-vault-1749873797
+PRINCIPAL_ID=0a76acb6-a835-4f3b-95b6-073559338f1e
+APP_SERVICE_PLAN=ai-agent-plan-simple
+RESOURCE_GROUP=startup_id_group
+LOCATION=westus2
+
+# URLs
+APP_URL=https://advanced-ai-agent-0003.azurewebsites.net
+KEY_VAULT_URL=https://ai-vault-1749873797.vault.azure.net
+
+# For GitHub Actions
+AZURE_WEBAPP_NAME=advanced-ai-agent-0003

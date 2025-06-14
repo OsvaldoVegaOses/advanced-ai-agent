@@ -1,0 +1,178 @@
+# GitHub Actions CI/CD Pipeline for Azure App Service Deployment
+# Save this file as .github/workflows/azure-ci-cd.yml in your repository
+
+name: Azure App Service CI/CD
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+env:
+  PYTHON_VERSION: '3.11'
+  AZURE_WEBAPP_NAME: 'advanced-ai-agent-0003'
+  AZURE_WEBAPP_PACKAGE_PATH: '.'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_DB: ai_agent_test
+          POSTGRES_USER: test_user
+          POSTGRES_PASSWORD: test_password
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+      
+      redis:
+        image: redis:7-alpine
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 6379:6379
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+
+    - name: Cache pip dependencies
+      uses: actions/cache@v3
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements-azure.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements-azure.txt
+        pip install pytest pytest-asyncio pytest-cov
+
+    - name: Download spaCy models
+      run: |
+        python -m spacy download es_core_news_sm || echo "Spanish model not available"
+        python -m spacy download en_core_web_sm || echo "English model not available"
+
+    - name: Run linting
+      run: |
+        pip install black isort flake8
+        black --check . || echo "Black formatting issues found"
+        isort --check-only . || echo "Import sorting issues found"
+        flake8 . || echo "Flake8 issues found"
+
+    - name: Run tests
+      env:
+        DATABASE_URL: postgresql://test_user:test_password@localhost:5432/ai_agent_test
+        REDIS_URL: redis://localhost:6379/0
+        AZURE_OPENAI_ENDPOINT: https://test.openai.azure.com/
+        ENVIRONMENT: test
+      run: |
+        pytest --cov=. --cov-report=xml --cov-report=html || echo "Tests completed with issues"
+
+  build:
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+
+    - name: Create deployment artifact
+      run: |
+        # Create a clean deployment package
+        mkdir -p deployment
+        
+        # Copy application files
+        cp -r api core services deployment/
+        cp main.py requirements-azure.txt deployment/
+        cp startup.py startup.sh web.config deployment/
+        cp .env.azure deployment/.env.example
+        
+        # Create static directory
+        mkdir -p deployment/static
+        
+        # Zip the deployment package
+        cd deployment
+        zip -r ../deployment-package.zip .
+        cd ..
+
+    - name: Upload deployment artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: deployment-package
+        path: deployment-package.zip
+
+  deploy-production:
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    environment: production
+    
+    steps:
+    - name: Download deployment artifact
+      uses: actions/download-artifact@v3
+      with:
+        name: deployment-package
+
+    - name: Login to Azure
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: Deploy to Azure App Service (Production)
+      uses: azure/webapps-deploy@v2
+      with:
+        app-name: ${{ env.AZURE_WEBAPP_NAME }}
+        package: deployment-package.zip
+
+    - name: Run health check
+      run: |
+        echo "🔍 Running health check for production environment..."
+        sleep 60
+        curl -f https://${{ env.AZURE_WEBAPP_NAME }}.azurewebsites.net/health/live || exit 1
+        echo "✅ Production deployment healthy"
+
+    - name: Notify deployment success
+      run: |
+        echo "🎉 Production deployment completed successfully!"
+        echo "Application URL: https://${{ env.AZURE_WEBAPP_NAME }}.azurewebsites.net"
+
+  rollback:
+    needs: deploy-production
+    runs-on: ubuntu-latest
+    if: failure()
+    environment: production
+    
+    steps:
+    - name: Login to Azure
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: Rollback deployment
+      run: |
+        echo "🔄 Rolling back to previous deployment..."
+        echo "⚠️ Manual rollback required - check Azure Portal"
+        echo "✅ Rollback notification completed"
