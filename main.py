@@ -14,7 +14,11 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.trustedhost import TrustedHostMiddleware
 from fastapi.responses import JSONResponse
 from fastapi.staticfiles import StaticFiles
-from prometheus_fastapi_instrumentator import Instrumentator
+try:
+    from prometheus_fastapi_instrumentator import Instrumentator
+    PROMETHEUS_AVAILABLE = True
+except ImportError:
+    PROMETHEUS_AVAILABLE = False
 
 from core.config import settings
 from core.database import init_db
@@ -99,9 +103,13 @@ app.add_middleware(
 )
 
 
-# Prometheus metrics
-instrumentator = Instrumentator()
-instrumentator.instrument(app).expose(app)
+# Prometheus metrics (optional)
+if PROMETHEUS_AVAILABLE:
+    instrumentator = Instrumentator()
+    instrumentator.instrument(app).expose(app)
+    logger.info("Prometheus metrics enabled")
+else:
+    logger.warning("Prometheus metrics not available - continuing without monitoring")
 
 
 # Exception handlers
