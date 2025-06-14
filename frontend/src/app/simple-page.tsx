@@ -8,7 +8,7 @@ interface HealthStatus {
   version: string;
 }
 
-export default function HomePage() {
+export default function SimplePage() {
   const [healthStatus, setHealthStatus] = useState<HealthStatus | null>(null);
   const [isChecking, setIsChecking] = useState(true);
 
@@ -107,10 +107,10 @@ export default function HomePage() {
 
             {healthStatus?.status === 'healthy' && (
               <button
-                onClick={() => alert('¡Sistema funcionando! Chat interface disponible próximamente.')}
+                onClick={() => alert('¡Chat interface será implementada próximamente!')}
                 className="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-3 px-4 rounded-lg transition-colors"
               >
-                💬 Advanced AI Chat
+                💬 Iniciar Chat con AI
               </button>
             )}
           </div>
