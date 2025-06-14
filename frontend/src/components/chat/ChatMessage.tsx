@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { MessageProps } from '../types';
+import { MessageProps } from '../../types';
 import { 
   UserIcon, 
   SparklesIcon,

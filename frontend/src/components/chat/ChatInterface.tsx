@@ -1,11 +1,11 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
-import { useAppStore } from '../store/useAppStore';
+import { useAppStore } from '../../store/useAppStore';
 import ChatMessage from './ChatMessage';
 import ChatInput from './ChatInput';
 import TypingIndicator from './TypingIndicator';
-import { useChat } from '../hooks/useChat';
+import { useChat } from '../../hooks/useChat';
 
 export default function ChatInterface() {
   const { chat } = useAppStore();

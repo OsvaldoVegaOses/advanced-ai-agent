@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
-import { useAppStore } from '../store/useAppStore';
+import { useAppStore } from '../../store/useAppStore';
 import { 
   CheckCircleIcon, 
   XCircleIcon, 
@@ -9,7 +9,7 @@ import {
   InformationCircleIcon,
   XMarkIcon 
 } from '@heroicons/react/24/outline';
-import { Notification } from '../types';
+import { Notification } from '../../types';
 
 const iconMap = {
   success: CheckCircleIcon,
