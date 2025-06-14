@@ -138,10 +138,17 @@ app = FastAPI(
 # CORS Middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=[
+        "https://delightful-coast-07a54bc1e.1.azurestaticapps.net",
+        "http://localhost:3000",
+        "http://localhost:8080",
+        "http://127.0.0.1:5500",
+        "*"
+    ],
     allow_credentials=True,
-    allow_methods=["*"],
+    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD", "PATCH"],
     allow_headers=["*"],
+    expose_headers=["*"]
 )
 
 # Trusted Host Middleware (in production)
@@ -358,6 +365,11 @@ async def generate_fallback_response(user_message: str) -> Dict[str, Any]:
 # =============================================================================
 # API ENDPOINTS
 # =============================================================================
+
+@app.options("/{path:path}")
+async def options_handler(path: str):
+    """Handle all OPTIONS requests for CORS preflight"""
+    return {}
 
 @app.get("/", response_model=Dict[str, str])
 async def root():

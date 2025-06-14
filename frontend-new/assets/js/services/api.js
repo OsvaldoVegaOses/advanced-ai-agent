@@ -3,23 +3,48 @@
  */
 class ApiService {
   constructor() {
-    // Usar directamente el backend para evitar problemas de proxy
-    this.baseUrl = 'https://advanced-ai-agent-0003.azurewebsites.net';
+    // Configuración de URLs con fallback
+    this.config = {
+      production: {
+        baseUrl: 'https://advanced-ai-agent-0003.azurewebsites.net',
+        corsProxy: '/api'
+      },
+      fallback: {
+        baseUrl: 'https://advanced-ai-agent-0003.azurewebsites.net',
+        corsProxy: null
+      }
+    };
+    
+    this.currentConfig = this.config.production;
     this.endpoints = {
       chat: '/chat',
       health: '/health'
     };
+    
+    this.corsRetryAttempted = false;
   }
 
   /**
-   * Realizar petición HTTP con manejo de errores
+   * Construir URL con configuración actual
+   */
+  buildUrl(endpoint) {
+    if (this.currentConfig.corsProxy) {
+      return `${this.currentConfig.corsProxy}${endpoint}`;
+    }
+    return `${this.currentConfig.baseUrl}${endpoint}`;
+  }
+
+  /**
+   * Realizar petición HTTP con manejo de errores y fallback CORS
    */
   async request(endpoint, options = {}) {
-    const url = `${this.baseUrl}${endpoint}`;
+    const url = this.buildUrl(endpoint);
     const defaultOptions = {
       headers: {
         'Content-Type': 'application/json',
       },
+      mode: 'cors',
+      credentials: 'omit'
     };
 
     try {
@@ -50,10 +75,21 @@ class ApiService {
       }
     } catch (error) {
       console.error(`API Error (${endpoint}):`, error);
+      
+      // Si es un error CORS y no hemos intentado el fallback
+      if (error.message.includes('CORS') && !this.corsRetryAttempted) {
+        console.warn('CORS error detected, switching to fallback configuration');
+        this.corsRetryAttempted = true;
+        this.currentConfig = this.config.fallback;
+        
+        // Reintentar con configuración fallback
+        return await this.request(endpoint, options);
+      }
+      
       return { 
         success: false, 
         error: error.message,
-        status: error.status || 'network_error'
+        status: error.name === 'TypeError' ? 'cors_error' : 'network_error'
       };
     }
   }

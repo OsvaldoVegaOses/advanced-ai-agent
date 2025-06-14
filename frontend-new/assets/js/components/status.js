@@ -29,8 +29,12 @@ class StatusComponent {
       this.setStatus('connected', 'Conectado');
     } else {
       // Distinguir entre diferentes tipos de errores
-      if (result.status === 'route_error') {
+      if (result.status === 'cors_error') {
+        this.setStatus('error', 'Error CORS - Actualizando backend...');
+      } else if (result.status === 'route_error') {
         this.setStatus('error', 'Configurando rutas...');
+      } else if (result.status === 'network_error') {
+        this.setStatus('error', 'Error de red');
       } else {
         this.setStatus('error', 'Sin conexión');
       }
