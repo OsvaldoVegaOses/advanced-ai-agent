@@ -1,32 +1,51 @@
-#!/usr/bin/env python3
-"""
-Simple test application for Azure App Service
-This file will be deployed to test the basic functionality
-"""
-
+from http.server import HTTPServer, BaseHTTPRequestHandler
+import json
 import os
-from flask import Flask
 
-app = Flask(__name__)
+class CORSHandler(BaseHTTPRequestHandler):
+    def _set_cors_headers(self):
+        self.send_header('Access-Control-Allow-Origin', '*')
+        self.send_header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
+        self.send_header('Access-Control-Allow-Headers', 'Content-Type')
+    
+    def do_OPTIONS(self):
+        self.send_response(200)
+        self._set_cors_headers()
+        self.end_headers()
+    
+    def do_GET(self):
+        if self.path == '/health':
+            self.send_response(200)
+            self.send_header('Content-Type', 'application/json')
+            self._set_cors_headers()
+            self.end_headers()
+            
+            response = {
+                "status": "healthy",
+                "service": "Advanced AI Agent",
+                "version": "1.0.0"
+            }
+            self.wfile.write(json.dumps(response).encode())
+            
+        elif self.path == '/':
+            self.send_response(200)
+            self.send_header('Content-Type', 'application/json')
+            self._set_cors_headers()
+            self.end_headers()
+            
+            response = {
+                "message": "Advanced AI Agent is running\!",
+                "status": "healthy"
+            }
+            self.wfile.write(json.dumps(response).encode())
+        else:
+            self.send_response(404)
+            self._set_cors_headers()
+            self.end_headers()
 
-@app.route('/')
-def hello():
-    return {
-        "message": "🚀 Advanced AI Agent is running!",
-        "status": "healthy",
-        "environment": os.getenv('ENVIRONMENT', 'unknown'),
-        "azure_openai_endpoint": os.getenv('AZURE_OPENAI_ENDPOINT', 'not configured'),
-        "version": "1.0.0"
-    }
-
-@app.route('/health')
-def health():
-    return {"status": "healthy", "message": "App Service is running"}
-
-@app.route('/health/live')
-def health_live():
-    return {"status": "healthy", "timestamp": "2025-06-14"}
-
-if __name__ == '__main__':
+if __name__ == "__main__":
     port = int(os.environ.get('PORT', 8000))
-    app.run(host='0.0.0.0', port=port, debug=False)
+    server = HTTPServer(('0.0.0.0', port), CORSHandler)
+    print(f"Server running on port {port}")
+    server.serve_forever()
+EOF < /dev/null
