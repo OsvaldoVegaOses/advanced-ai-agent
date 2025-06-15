@@ -42,7 +42,7 @@ except Exception as e:
 
 # Start the application
 echo "🎯 Starting FastAPI application..."
-exec gunicorn main:app \
+exec gunicorn app:app \
     --bind 0.0.0.0:${PORT:-8000} \
     --worker-class uvicorn.workers.UvicornWorker \
     --workers 2 \

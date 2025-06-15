@@ -21,13 +21,14 @@ try:
     from pydantic import BaseModel, Field
     import uvicorn
     
-    # Import OpenAI with fallback
+    # Import OpenAI and Azure Identity with fallback
     try:
         from openai import AsyncAzureOpenAI
+        from azure.identity import DefaultAzureCredential
         SIMPLE_AI_AVAILABLE = True
-        print("✅ OpenAI imported successfully")
+        print("✅ OpenAI and Azure Identity imported successfully")
     except ImportError as e:
-        print(f"OpenAI not available: {e}")
+        print(f"OpenAI/Azure Identity not available: {e}")
         SIMPLE_AI_AVAILABLE = False
     FULL_AI_AVAILABLE = False  # Disable complex AI features for now
         
@@ -372,19 +373,37 @@ async def generate_simple_ai_response(messages: List[ChatMessage],
     
     # Get Azure OpenAI settings from environment
     azure_endpoint = os.getenv("AZURE_OPENAI_ENDPOINT")
-    azure_key = os.getenv("AZURE_OPENAI_API_KEY")
-    azure_version = os.getenv("AZURE_OPENAI_VERSION", "2024-06-01")
+    azure_version = os.getenv("AZURE_OPENAI_VERSION", "2024-10-21")
     azure_deployment = os.getenv("AZURE_CHAT_DEPLOYMENT", "gpt-4o-mini")
+    use_managed_identity = os.getenv("USE_MANAGED_IDENTITY", "True").lower() == "true"
     
-    if not azure_endpoint or not azure_key:
-        raise Exception("Azure OpenAI credentials not configured")
+    if not azure_endpoint:
+        raise Exception("AZURE_OPENAI_ENDPOINT not configured")
     
-    # Create simple client
-    client = AsyncAzureOpenAI(
-        azure_endpoint=azure_endpoint,
-        api_key=azure_key,
-        api_version=azure_version
-    )
+    # Create client with Managed Identity or API key
+    if use_managed_identity:
+        try:
+            credential = DefaultAzureCredential()
+            client = AsyncAzureOpenAI(
+                azure_endpoint=azure_endpoint,
+                azure_ad_token_provider=credential,
+                api_version=azure_version
+            )
+            print("✅ Using Azure Managed Identity for OpenAI")
+        except Exception as e:
+            print(f"❌ Managed Identity failed: {e}")
+            raise Exception("Managed Identity authentication failed")
+    else:
+        # Fallback to API key
+        azure_key = os.getenv("AZURE_OPENAI_API_KEY")
+        if not azure_key:
+            raise Exception("Neither Managed Identity nor API key configured")
+        client = AsyncAzureOpenAI(
+            azure_endpoint=azure_endpoint,
+            api_key=azure_key,
+            api_version=azure_version
+        )
+        print("✅ Using API key for OpenAI")
     
     # Convert to OpenAI format
     openai_messages = []
