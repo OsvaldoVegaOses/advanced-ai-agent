@@ -466,7 +466,7 @@ async def options_handler(path: str):
     """Handle all OPTIONS requests for CORS preflight"""
     return {}
 
-@app.get("/", response_model=Dict[str, str])
+@app.get("/")
 async def root():
     """Root endpoint"""
     return {
@@ -476,7 +476,7 @@ async def root():
         "ai_enabled": str(FULL_AI_AVAILABLE or SIMPLE_AI_AVAILABLE)
     }
 
-@app.get("/health", response_model=HealthResponse)
+@app.get("/health")
 async def health_check():
     """Comprehensive health check"""
     uptime = (datetime.now() - app_start_time).total_seconds()
@@ -502,58 +502,90 @@ async def health_check():
     
     return health_data
 
-@app.post("/chat", response_model=ChatResponse)
-async def chat_endpoint(request: ChatRequest):
+@app.post("/chat")
+async def chat_endpoint(request):
     """Main chat endpoint with Azure OpenAI integration"""
     try:
+        # Handle request - could be Pydantic model or dict
+        if hasattr(request, 'message'):
+            # Pydantic model
+            message = request.message
+            conversation_id = getattr(request, 'conversation_id', 'default')
+            temperature = getattr(request, 'temperature', 0.7)
+            max_tokens = getattr(request, 'max_tokens', 1000)
+        else:
+            # Fallback mode - treat as dict
+            message = request.get('message', '')
+            conversation_id = request.get('conversation_id', 'default')
+            temperature = request.get('temperature', 0.7)
+            max_tokens = request.get('max_tokens', 1000)
+        
         # Get conversation
-        conversation = get_conversation(request.conversation_id)
+        conversation = get_conversation(conversation_id)
         
         # Add user message
-        user_message = ChatMessage(role="user", content=request.message)
-        add_message_to_conversation(request.conversation_id, user_message)
+        user_message = ChatMessage(role="user", content=message)
+        add_message_to_conversation(conversation_id, user_message)
         
         # Generate AI response
         ai_result = await generate_ai_response_advanced(
             conversation,
-            temperature=request.temperature,
-            max_tokens=request.max_tokens
+            temperature=temperature,
+            max_tokens=max_tokens
         )
         
         # Add AI response to conversation
         ai_message = ChatMessage(role="assistant", content=ai_result["content"])
-        add_message_to_conversation(request.conversation_id, ai_message)
+        add_message_to_conversation(conversation_id, ai_message)
         
         # Return response
-        return ChatResponse(
-            response=ai_result["content"],
-            conversation_id=request.conversation_id,
-            timestamp=ai_message.timestamp,
-            model_used=ai_result.get("model_used"),
-            tokens_used=ai_result.get("tokens_used"),
-            processing_time_ms=ai_result.get("processing_time_ms")
-        )
+        response_data = {
+            "response": ai_result["content"],
+            "conversation_id": conversation_id,
+            "timestamp": ai_message.timestamp,
+            "model_used": ai_result.get("model_used"),
+            "tokens_used": ai_result.get("tokens_used"),
+            "processing_time_ms": ai_result.get("processing_time_ms")
+        }
+        
+        # Return ChatResponse object if available, otherwise dict
+        if 'BaseModel' in globals():
+            return ChatResponse(**response_data)
+        else:
+            return response_data
         
     except Exception as e:
         print(f"Chat endpoint error: {e}")
         traceback.print_exc()
-        raise HTTPException(
-            status_code=500,
-            detail=f"Error processing chat request: {str(e)}"
-        )
+        
+        # Return error appropriately
+        error_response = {
+            "error": f"Error processing chat request: {str(e)}",
+            "status_code": 500,
+            "timestamp": datetime.now().isoformat()
+        }
+        
+        if 'HTTPException' in globals():
+            raise HTTPException(status_code=500, detail=error_response["error"])
+        else:
+            return error_response
 
-@app.get("/conversations", response_model=Dict[str, List[ConversationInfo]])
+@app.get("/conversations")
 async def get_conversations():
     """Get all conversation metadata"""
     return {
         "conversations": list(conversation_metadata.values())
     }
 
-@app.get("/conversations/{conversation_id}", response_model=Dict[str, Any])
+@app.get("/conversations/{conversation_id}")
 async def get_conversation_detail(conversation_id: str):
     """Get detailed conversation history"""
     if conversation_id not in conversations:
-        raise HTTPException(status_code=404, detail="Conversation not found")
+        error_msg = "Conversation not found"
+        if 'HTTPException' in globals():
+            raise HTTPException(status_code=404, detail=error_msg)
+        else:
+            return {"error": error_msg, "status_code": 404}
     
     messages = conversations[conversation_id]
     metadata = conversation_metadata[conversation_id]
@@ -567,14 +599,18 @@ async def get_conversation_detail(conversation_id: str):
 async def delete_conversation(conversation_id: str):
     """Delete a conversation"""
     if conversation_id not in conversations:
-        raise HTTPException(status_code=404, detail="Conversation not found")
+        error_msg = "Conversation not found"
+        if 'HTTPException' in globals():
+            raise HTTPException(status_code=404, detail=error_msg)
+        else:
+            return {"error": error_msg, "status_code": 404}
     
     del conversations[conversation_id]
     del conversation_metadata[conversation_id]
     
     return {"message": "Conversation deleted successfully"}
 
-@app.get("/status", response_model=Dict[str, Any])
+@app.get("/status")
 async def detailed_status():
     """Detailed system status"""
     status = {
