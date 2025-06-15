@@ -632,6 +632,54 @@ async def detailed_status():
     
     return status
 
+@app.get("/debug")
+async def debug_info():
+    """Debug information to diagnose deployment issues"""
+    try:
+        # Check what's available
+        debug_data = {
+            "python_version": sys.version,
+            "fastapi_available": 'FastAPI' in globals(),
+            "pydantic_available": 'BaseModel' in globals(),
+            "openai_available": SIMPLE_AI_AVAILABLE or FULL_AI_AVAILABLE,
+            "full_ai_available": FULL_AI_AVAILABLE,
+            "simple_ai_available": SIMPLE_AI_AVAILABLE,
+            "environment_vars": {
+                "ENVIRONMENT": os.getenv("ENVIRONMENT"),
+                "PORT": os.getenv("PORT"),
+                "AZURE_OPENAI_ENDPOINT": "***" if os.getenv("AZURE_OPENAI_ENDPOINT") else None,
+                "AZURE_OPENAI_API_KEY": "***" if os.getenv("AZURE_OPENAI_API_KEY") else None
+            },
+            "app_type": type(app).__name__,
+            "registered_routes": []
+        }
+        
+        # Check registered routes
+        if hasattr(app, 'routes'):
+            if hasattr(app.routes, '__iter__'):
+                for route in app.routes:
+                    if hasattr(route, 'methods') and hasattr(route, 'path'):
+                        debug_data["registered_routes"].append({
+                            "methods": list(route.methods) if hasattr(route.methods, '__iter__') else str(route.methods),
+                            "path": route.path
+                        })
+            elif isinstance(app.routes, list):
+                # SimpleApp routes
+                for method, path, func in app.routes:
+                    debug_data["registered_routes"].append({
+                        "method": method,
+                        "path": path,
+                        "function": func.__name__
+                    })
+        
+        return debug_data
+        
+    except Exception as e:
+        return {
+            "error": f"Debug endpoint error: {str(e)}",
+            "traceback": traceback.format_exc()
+        }
+
 
 # =============================================================================
 # ERROR HANDLERS
