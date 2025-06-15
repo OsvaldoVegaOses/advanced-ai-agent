@@ -43,43 +43,90 @@ except ImportError:
 
 
 # =============================================================================
-# PYDANTIC MODELS
+# PYDANTIC MODELS (Conditional Definition)
 # =============================================================================
 
-class ChatMessage(BaseModel):
-    role: str = Field(..., description="Message role (user/assistant)")
-    content: str = Field(..., description="Message content")
-    timestamp: Optional[str] = Field(default=None)
+# Define models only if Pydantic is available
+if 'BaseModel' in globals():
+    class ChatMessage(BaseModel):
+        role: str = Field(..., description="Message role (user/assistant)")
+        content: str = Field(..., description="Message content")
+        timestamp: Optional[str] = Field(default=None)
 
-class ChatRequest(BaseModel):
-    message: str = Field(..., description="User message")
-    conversation_id: str = Field(default="default", description="Conversation ID")
-    temperature: Optional[float] = Field(default=0.7, ge=0.0, le=2.0)
-    max_tokens: Optional[int] = Field(default=1000, ge=1, le=4000)
-    stream: Optional[bool] = Field(default=False)
+    class ChatRequest(BaseModel):
+        message: str = Field(..., description="User message")
+        conversation_id: str = Field(default="default", description="Conversation ID")
+        temperature: Optional[float] = Field(default=0.7, ge=0.0, le=2.0)
+        max_tokens: Optional[int] = Field(default=1000, ge=1, le=4000)
+        stream: Optional[bool] = Field(default=False)
 
-class ChatResponse(BaseModel):
-    response: str = Field(..., description="AI response")
-    conversation_id: str = Field(..., description="Conversation ID")
-    timestamp: str = Field(..., description="Response timestamp")
-    model_used: Optional[str] = Field(default=None)
-    tokens_used: Optional[int] = Field(default=None)
-    processing_time_ms: Optional[float] = Field(default=None)
+    class ChatResponse(BaseModel):
+        response: str = Field(..., description="AI response")
+        conversation_id: str = Field(..., description="Conversation ID")
+        timestamp: str = Field(..., description="Response timestamp")
+        model_used: Optional[str] = Field(default=None)
+        tokens_used: Optional[int] = Field(default=None)
+        processing_time_ms: Optional[float] = Field(default=None)
 
-class HealthResponse(BaseModel):
-    status: str = Field(..., description="Service status")
-    service: str = Field(..., description="Service name")
-    version: str = Field(..., description="Service version")
-    ai_models: Optional[Dict[str, Any]] = Field(default=None)
-    uptime_seconds: Optional[float] = Field(default=None)
+    class HealthResponse(BaseModel):
+        status: str = Field(..., description="Service status")
+        service: str = Field(..., description="Service name")
+        version: str = Field(..., description="Service version")
+        ai_models: Optional[Dict[str, Any]] = Field(default=None)
+        uptime_seconds: Optional[float] = Field(default=None)
 
-class ConversationInfo(BaseModel):
-    id: str
-    title: str
-    last_message: str
-    message_count: int
-    created_at: str
-    updated_at: str
+    class ConversationInfo(BaseModel):
+        id: str
+        title: str
+        last_message: str
+        message_count: int
+        created_at: str
+        updated_at: str
+else:
+    # Fallback simple classes when Pydantic is not available
+    class ChatMessage:
+        def __init__(self, role: str, content: str, timestamp: str = None):
+            self.role = role
+            self.content = content
+            self.timestamp = timestamp or datetime.now().isoformat()
+
+    class ChatRequest:
+        def __init__(self, message: str, conversation_id: str = "default", 
+                     temperature: float = 0.7, max_tokens: int = 1000, stream: bool = False):
+            self.message = message
+            self.conversation_id = conversation_id
+            self.temperature = temperature
+            self.max_tokens = max_tokens
+            self.stream = stream
+
+    class ChatResponse:
+        def __init__(self, response: str, conversation_id: str, timestamp: str,
+                     model_used: str = None, tokens_used: int = None, processing_time_ms: float = None):
+            self.response = response
+            self.conversation_id = conversation_id
+            self.timestamp = timestamp
+            self.model_used = model_used
+            self.tokens_used = tokens_used
+            self.processing_time_ms = processing_time_ms
+
+    class HealthResponse:
+        def __init__(self, status: str, service: str, version: str,
+                     ai_models: Dict[str, Any] = None, uptime_seconds: float = None):
+            self.status = status
+            self.service = service
+            self.version = version
+            self.ai_models = ai_models
+            self.uptime_seconds = uptime_seconds
+
+    class ConversationInfo:
+        def __init__(self, id: str, title: str, last_message: str, message_count: int,
+                     created_at: str, updated_at: str):
+            self.id = id
+            self.title = title
+            self.last_message = last_message
+            self.message_count = message_count
+            self.created_at = created_at
+            self.updated_at = updated_at
 
 
 # =============================================================================
@@ -89,74 +136,122 @@ class ConversationInfo(BaseModel):
 # Track application start time
 app_start_time = datetime.now()
 
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    """Application lifespan management"""
-    # Startup
-    print("🚀 Starting Advanced AI Agent...")
-    
-    if FULL_AI_AVAILABLE:
-        try:
-            await model_manager.initialize()
-            print("✅ AI Model Manager initialized successfully")
-        except Exception as e:
-            print(f"⚠️ AI initialization failed: {e}")
-    elif SIMPLE_AI_AVAILABLE:
-        print("✅ Simple Azure OpenAI client available")
-    else:
-        print("⚠️ Running in fallback mode (AI features limited)")
-    
-    yield
-    
-    # Shutdown
-    print("🛑 Shutting down Advanced AI Agent...")
-    if FULL_AI_AVAILABLE:
-        try:
-            await model_manager.cleanup()
-            print("✅ AI cleanup completed")
-        except Exception as e:
-            print(f"⚠️ Cleanup error: {e}")
+# Only define lifespan if FastAPI and asynccontextmanager are available
+if 'FastAPI' in globals() and 'asynccontextmanager' in globals():
+    @asynccontextmanager
+    async def lifespan(app):
+        """Application lifespan management"""
+        # Startup
+        print("🚀 Starting Advanced AI Agent...")
+        
+        if FULL_AI_AVAILABLE:
+            try:
+                await model_manager.initialize()
+                print("✅ AI Model Manager initialized successfully")
+            except Exception as e:
+                print(f"⚠️ AI initialization failed: {e}")
+        elif SIMPLE_AI_AVAILABLE:
+            print("✅ Simple Azure OpenAI client available")
+        else:
+            print("⚠️ Running in fallback mode (AI features limited)")
+        
+        yield
+        
+        # Shutdown
+        print("🛑 Shutting down Advanced AI Agent...")
+        if FULL_AI_AVAILABLE:
+            try:
+                await model_manager.cleanup()
+                print("✅ AI cleanup completed")
+            except Exception as e:
+                print(f"⚠️ Cleanup error: {e}")
+else:
+    # Fallback when lifespan is not available
+    lifespan = None
 
 
 # =============================================================================
 # APPLICATION SETUP
 # =============================================================================
 
-app = FastAPI(
-    title="Advanced AI Agent",
-    description="Enterprise AI Agent with Azure OpenAI integration",
-    version="1.0.0",
-    lifespan=lifespan,
-    docs_url="/docs",
-    redoc_url="/redoc"
-)
+# Create FastAPI app only if FastAPI is available
+if 'FastAPI' in globals():
+    app = FastAPI(
+        title="Advanced AI Agent",
+        description="Enterprise AI Agent with Azure OpenAI integration",
+        version="1.0.0",
+        lifespan=lifespan,
+        docs_url="/docs",
+        redoc_url="/redoc"
+    )
+else:
+    # Simple fallback app when FastAPI is not available
+    class SimpleApp:
+        def __init__(self):
+            self.routes = []
+            
+        def get(self, path, **kwargs):
+            def decorator(func):
+                self.routes.append(('GET', path, func))
+                return func
+            return decorator
+            
+        def post(self, path, **kwargs):
+            def decorator(func):
+                self.routes.append(('POST', path, func))
+                return func
+            return decorator
+            
+        def options(self, path, **kwargs):
+            def decorator(func):
+                self.routes.append(('OPTIONS', path, func))
+                return func
+            return decorator
+            
+        def delete(self, path, **kwargs):
+            def decorator(func):
+                self.routes.append(('DELETE', path, func))
+                return func
+            return decorator
+            
+        def add_middleware(self, *args, **kwargs):
+            pass  # No-op for fallback
+            
+        def exception_handler(self, *args, **kwargs):
+            def decorator(func):
+                return func
+            return decorator
+    
+    app = SimpleApp()
 
 # =============================================================================
 # MIDDLEWARE
 # =============================================================================
 
-# CORS Middleware
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=[
-        "https://delightful-coast-07a54bc1e.1.azurestaticapps.net",
-        "http://localhost:3000",
-        "http://localhost:8080",
-        "http://127.0.0.1:5500",
-        "*"
-    ],
-    allow_credentials=True,
-    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD", "PATCH"],
-    allow_headers=["*"],
-    expose_headers=["*"]
-)
-
-# Trusted Host Middleware (in production)
-if FULL_AI_AVAILABLE and hasattr(settings, 'ALLOWED_HOSTS'):
+# Add middleware only if FastAPI is available
+if 'FastAPI' in globals() and 'CORSMiddleware' in globals():
+    # CORS Middleware
     app.add_middleware(
-        TrustedHostMiddleware, 
-        allowed_hosts=settings.ALLOWED_HOSTS
+        CORSMiddleware,
+        allow_origins=[
+            "https://delightful-coast-07a54bc1e.1.azurestaticapps.net",
+            "http://localhost:3000",
+            "http://localhost:8080",
+            "http://127.0.0.1:5500",
+            "*"
+        ],
+        allow_credentials=True,
+        allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD", "PATCH"],
+        allow_headers=["*"],
+        expose_headers=["*"]
     )
+
+    # Trusted Host Middleware (in production)
+    if FULL_AI_AVAILABLE and hasattr(settings, 'ALLOWED_HOSTS') and 'TrustedHostMiddleware' in globals():
+        app.add_middleware(
+            TrustedHostMiddleware, 
+            allowed_hosts=settings.ALLOWED_HOSTS
+        )
 
 
 # =============================================================================
@@ -506,32 +601,34 @@ async def detailed_status():
 # ERROR HANDLERS
 # =============================================================================
 
-@app.exception_handler(HTTPException)
-async def http_exception_handler(request: Request, exc: HTTPException):
-    """Handle HTTP exceptions"""
-    return JSONResponse(
-        status_code=exc.status_code,
-        content={
-            "error": exc.detail,
-            "status_code": exc.status_code,
-            "timestamp": datetime.now().isoformat()
-        }
-    )
+# Only add error handlers if FastAPI and HTTPException are available
+if 'FastAPI' in globals() and 'HTTPException' in globals() and 'JSONResponse' in globals():
+    @app.exception_handler(HTTPException)
+    async def http_exception_handler(request, exc):
+        """Handle HTTP exceptions"""
+        return JSONResponse(
+            status_code=exc.status_code,
+            content={
+                "error": exc.detail,
+                "status_code": exc.status_code,
+                "timestamp": datetime.now().isoformat()
+            }
+        )
 
-@app.exception_handler(Exception)
-async def general_exception_handler(request: Request, exc: Exception):
-    """Handle general exceptions"""
-    print(f"Unhandled exception: {exc}")
-    traceback.print_exc()
-    
-    return JSONResponse(
-        status_code=500,
-        content={
-            "error": "Internal server error",
-            "message": str(exc) if os.getenv("DEBUG") else "An unexpected error occurred",
-            "timestamp": datetime.now().isoformat()
-        }
-    )
+    @app.exception_handler(Exception)
+    async def general_exception_handler(request, exc):
+        """Handle general exceptions"""
+        print(f"Unhandled exception: {exc}")
+        traceback.print_exc()
+        
+        return JSONResponse(
+            status_code=500,
+            content={
+                "error": "Internal server error",
+                "message": str(exc) if os.getenv("DEBUG") else "An unexpected error occurred",
+                "timestamp": datetime.now().isoformat()
+            }
+        )
 
 
 # =============================================================================
