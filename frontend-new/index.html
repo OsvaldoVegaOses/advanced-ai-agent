@@ -10,12 +10,13 @@
     <!-- Tailwind CSS compilado localmente -->
     <link href="./assets/css/styles.css" rel="stylesheet">
     
-    <!-- Preload JavaScript -->
-    <link rel="preload" href="./assets/js/services/api.js" as="script">
-    <link rel="preload" href="./assets/js/components/message.js" as="script">
-    <link rel="preload" href="./assets/js/components/status.js" as="script">
-    <link rel="preload" href="./assets/js/components/chat.js" as="script">
-    <link rel="preload" href="./assets/js/main.js" as="script">
+    <!-- Preload JavaScript - New Modular System -->
+    <link rel="preload" href="./assets/js/modules/ConnectionTester.js" as="script">
+    <link rel="preload" href="./assets/js/modules/HealthChecker.js" as="script">
+    <link rel="preload" href="./assets/js/modules/ChatConnector.js" as="script">
+    <link rel="preload" href="./assets/js/modules/StatusReporter.js" as="script">
+    <link rel="preload" href="./assets/js/modules/SystemManager.js" as="script">
+    <link rel="preload" href="./assets/js/main-modular.js" as="script">
 </head>
 <body class="bg-gray-100 h-screen overflow-hidden">
     <!-- Main Container -->
@@ -120,7 +121,7 @@
                                class="text-primary-600 hover:underline">
                                 📂 Código Fuente
                             </a>
-                            <span class="text-gray-500">Version 2.0.0</span>
+                            <span class="text-gray-500">Version 3.0.0 - Modular</span>
                         </div>
                     </div>
                 </div>
@@ -136,11 +137,20 @@
         </div>
     </div>
 
-    <!-- JavaScript Modules -->
+    <!-- JavaScript Modules - New Modular System -->
+    <script src="./assets/js/modules/ConnectionTester.js"></script>
+    <script src="./assets/js/modules/HealthChecker.js"></script>
+    <script src="./assets/js/modules/ChatConnector.js"></script>
+    <script src="./assets/js/modules/StatusReporter.js"></script>
+    <script src="./assets/js/modules/SystemManager.js"></script>
+    <script src="./assets/js/main-modular.js"></script>
+    
+    <!-- Legacy System (available as fallback)
     <script src="./assets/js/services/api.js"></script>
     <script src="./assets/js/components/message.js"></script>
     <script src="./assets/js/components/status.js"></script>
     <script src="./assets/js/components/chat.js"></script>
     <script src="./assets/js/main.js"></script>
+    -->
 </body>
 </html>
