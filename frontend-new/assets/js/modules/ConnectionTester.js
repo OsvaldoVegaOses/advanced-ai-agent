@@ -5,10 +5,12 @@
 class ConnectionTester {
   constructor() {
     this.backendUrl = 'https://advanced-ai-agent-0003.azurewebsites.net';
+    this.isStandardPlan = false; // Será detectado automáticamente
     this.testResults = {
       directConnection: null,
       proxyConnection: null,
       corsSupport: null,
+      linkedBackend: null,
       timestamp: null
     };
   }
@@ -140,15 +142,78 @@ class ConnectionTester {
   }
 
   /**
+   * Probar si Azure Static Web Apps está en plan Standard (Linked Backend)
+   */
+  async testLinkedBackend() {
+    console.log('🔍 Testing Azure Static Web Apps Linked Backend...');
+    
+    try {
+      const response = await fetch('/api/health', {
+        method: 'GET',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        }
+      });
+      
+      const isJson = response.headers.get('content-type')?.includes('application/json');
+      
+      if (response.ok && isJson) {
+        const data = await response.json();
+        
+        this.testResults.linkedBackend = {
+          success: true,
+          status: response.status,
+          contentType: response.headers.get('content-type'),
+          data: data,
+          isStandardPlan: true
+        };
+        
+        this.isStandardPlan = true;
+        console.log('✅ Linked Backend working - Azure Static Web Apps Standard Plan detected!');
+      } else {
+        this.testResults.linkedBackend = {
+          success: false,
+          status: response.status,
+          contentType: response.headers.get('content-type'),
+          error: 'Linked Backend not working - likely Free Plan',
+          isStandardPlan: false
+        };
+        
+        console.log('⚠️ Linked Backend not working - Free Plan detected');
+      }
+      
+      return this.testResults.linkedBackend;
+      
+    } catch (error) {
+      this.testResults.linkedBackend = {
+        success: false,
+        error: error.message,
+        errorType: error.name,
+        isStandardPlan: false
+      };
+      
+      console.log('❌ Linked Backend test failed:', this.testResults.linkedBackend);
+      return this.testResults.linkedBackend;
+    }
+  }
+
+  /**
    * Ejecutar todos los tests
    */
   async runAllTests() {
     console.log('🚀 Running comprehensive connection tests...');
     this.testResults.timestamp = new Date().toISOString();
 
-    await this.testDirectConnection();
-    await this.testProxyConnection(); 
-    await this.testCorsSupport();
+    // Primero probar Linked Backend (Standard Plan)
+    await this.testLinkedBackend();
+    
+    // Si Linked Backend no funciona, probar otras opciones
+    if (!this.testResults.linkedBackend?.success) {
+      await this.testDirectConnection();
+      await this.testProxyConnection(); 
+      await this.testCorsSupport();
+    }
 
     return this.getReport();
   }
@@ -160,6 +225,8 @@ class ConnectionTester {
     const report = {
       timestamp: this.testResults.timestamp,
       summary: {
+        linkedBackendWorks: this.testResults.linkedBackend?.success || false,
+        isStandardPlan: this.isStandardPlan,
         directWorks: this.testResults.directConnection?.success || false,
         proxyWorks: this.testResults.proxyConnection?.success || false,
         corsWorks: this.testResults.corsSupport?.success || false
@@ -169,14 +236,16 @@ class ConnectionTester {
     };
 
     // Generar recomendaciones basadas en resultados
-    if (report.summary.proxyWorks) {
+    if (report.summary.linkedBackendWorks) {
+      report.recommendations.push('🥇 Azure Static Web Apps Standard Plan detected - Using Linked Backend');
+    } else if (report.summary.proxyWorks) {
       report.recommendations.push('✅ Use proxy connection (/api/*)');
     } else if (report.summary.directWorks && report.summary.corsWorks) {
       report.recommendations.push('✅ Use direct connection with CORS');
     } else if (report.summary.directWorks && !report.summary.corsWorks) {
-      report.recommendations.push('⚠️ Backend works but CORS issues - consider JSONP or server proxy');
+      report.recommendations.push('⚠️ Backend works but CORS issues - consider upgrading to Standard Plan');
     } else {
-      report.recommendations.push('❌ No working connection found - check backend status');
+      report.recommendations.push('❌ Consider upgrading to Azure Static Web Apps Standard Plan for Linked Backend');
     }
 
     console.log('📊 Connection Test Report:', report);
@@ -187,23 +256,39 @@ class ConnectionTester {
    * Obtener el mejor método de conexión disponible
    */
   getBestConnectionMethod() {
-    if (this.testResults.proxyConnection?.success) {
+    // Prioridad 1: Linked Backend (Standard Plan)
+    if (this.testResults.linkedBackend?.success) {
+      return {
+        method: 'linked-backend',
+        baseUrl: '',
+        prefix: '/api',
+        description: 'Azure Static Web Apps Standard Plan - Linked Backend'
+      };
+    }
+    // Prioridad 2: Proxy (Free Plan con configuración)
+    else if (this.testResults.proxyConnection?.success) {
       return {
         method: 'proxy',
         baseUrl: '',
-        prefix: '/api'
+        prefix: '/api',
+        description: 'Azure Static Web Apps Proxy'
       };
-    } else if (this.testResults.directConnection?.success && this.testResults.corsSupport?.success) {
+    }
+    // Prioridad 3: Direct + CORS
+    else if (this.testResults.directConnection?.success && this.testResults.corsSupport?.success) {
       return {
         method: 'direct',
         baseUrl: this.backendUrl,
-        prefix: ''
+        prefix: '',
+        description: 'Direct CORS connection'
       };
     }
+    
     return {
       method: 'none',
       baseUrl: null,
-      prefix: null
+      prefix: null,
+      description: 'No working connection - consider upgrading to Standard Plan'
     };
   }
 }
