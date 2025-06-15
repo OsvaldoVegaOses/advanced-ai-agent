@@ -213,7 +213,9 @@ class ChatConnector {
    * Construir URL para chat
    */
   buildChatUrl() {
-    if (this.connectionMethod.method === 'proxy') {
+    if (this.connectionMethod.method === 'linked-backend') {
+      return '/api/chat';
+    } else if (this.connectionMethod.method === 'proxy') {
       return '/api/chat';
     } else if (this.connectionMethod.method === 'direct') {
       return `${this.connectionMethod.baseUrl}/chat`;

@@ -125,7 +125,9 @@ class HealthChecker {
    * Construir URL para health check
    */
   buildHealthUrl() {
-    if (this.connectionMethod.method === 'proxy') {
+    if (this.connectionMethod.method === 'linked-backend') {
+      return '/api/health';
+    } else if (this.connectionMethod.method === 'proxy') {
       return '/api/health';
     } else if (this.connectionMethod.method === 'direct') {
       return `${this.connectionMethod.baseUrl}/health`;

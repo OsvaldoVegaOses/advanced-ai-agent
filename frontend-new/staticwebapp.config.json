@@ -1,22 +1,8 @@
 {
   "routes": [
     {
-      "route": "/api/health",
-      "allowedRoles": ["anonymous"],
-      "methods": ["GET", "OPTIONS"],
-      "rewrite": "https://advanced-ai-agent-0003.azurewebsites.net/health"
-    },
-    {
-      "route": "/api/chat", 
-      "allowedRoles": ["anonymous"],
-      "methods": ["POST", "OPTIONS"],
-      "rewrite": "https://advanced-ai-agent-0003.azurewebsites.net/chat"
-    },
-    {
-      "route": "/api/:path*",
-      "allowedRoles": ["anonymous"],
-      "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD", "PATCH"],
-      "rewrite": "https://advanced-ai-agent-0003.azurewebsites.net/{path}"
+      "route": "/api/*",
+      "allowedRoles": ["anonymous"]
     }
   ],
   "navigationFallback": {

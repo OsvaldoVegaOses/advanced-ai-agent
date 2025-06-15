@@ -5,6 +5,7 @@
 class ConnectionTester {
   constructor() {
     this.backendUrl = 'https://advanced-ai-agent-0003.azurewebsites.net';
+    this.linkedBackendUrl = '/api'; // For Standard Plan Linked Backend
     this.isStandardPlan = false; // Será detectado automáticamente
     this.testResults = {
       directConnection: null,
